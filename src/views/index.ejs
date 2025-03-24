@@ -1,0 +1,122 @@
+<div class="bg-white shadow-lg rounded-lg p-6">
+    <div class="mb-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-2">Subpage Builder</h2>
+        <p class="text-gray-600">Create and customize your subpage in a few simple steps.</p>
+    </div>
+
+    <form id="builderForm" class="space-y-8">
+        <!-- Step 1: Category Selection -->
+        <div class="step" id="step1">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">
+                <span class="bg-blue-500 text-white rounded-full px-3 py-1 mr-2">1</span>
+                Select Category
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <% categories.forEach(category => { %>
+                    <div class="category-btn p-4 border-2 border-gray-200 rounded-lg hover:border-blue-500 focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
+                         data-category="<%= category %>">
+                        <div class="flex flex-col items-center">
+                            <i class="fas fa-folder text-2xl mb-2 text-blue-500"></i>
+                            <p class="font-medium"><%= category %></p>
+                        </div>
+                    </div>
+                <% }); %>
+            </div>
+        </div>
+
+        <!-- Step 2: GEO Selection -->
+        <div class="step hidden" id="step2">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">
+                <span class="bg-blue-500 text-white rounded-full px-3 py-1 mr-2">2</span>
+                Select GEO Region
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="geoContainer">
+                <!-- GEO options will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Step 3: Enter Details -->
+        <div class="step hidden" id="step3">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">
+                <span class="bg-blue-500 text-white rounded-full px-3 py-1 mr-2">3</span>
+                Enter Your Details
+            </h3>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Domain Name</label>
+                    <input type="text" name="domainName" placeholder="My Awesome Site" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <p class="mt-1 text-sm text-gray-500">Example: My Awesome Site</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Domain URL</label>
+                    <input type="text" name="domainUrl" placeholder="awesome.com" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <p class="mt-1 text-sm text-gray-500">Example: awesome.com</p>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Subpage Name</label>
+                    <input type="text" name="subpageName" placeholder="luxury-hotels" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                    <p class="mt-1 text-sm text-gray-500">Example: luxury-hotels</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Template Selection -->
+        <div class="step hidden" id="step4">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4">
+                <span class="bg-blue-500 text-white rounded-full px-3 py-1 mr-2">4</span>
+                Select Template
+            </h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="templateContainer">
+                <!-- Templates will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between pt-6">
+            <button type="button" id="prevBtn" class="hidden px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500">
+                Previous
+            </button>
+            <button type="button" id="nextBtn" class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Next
+            </button>
+            <button type="submit" id="submitBtn" class="hidden px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500">
+                Generate Subpage
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- Preview Modal -->
+<div id="previewModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 shadow-lg rounded-md bg-white">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold">Preview</h3>
+            <button id="closePreview" class="text-gray-500 hover:text-gray-700">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div id="previewContent" class="overflow-auto max-h-[60vh]">
+            <!-- Preview content will be loaded here -->
+        </div>
+    </div>
+</div>
+
+<!-- Error Modal -->
+<div id="errorModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-50">
+    <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+        <div class="mt-3 text-center">
+            <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100">
+                <i class="fas fa-exclamation-triangle text-red-600"></i>
+            </div>
+            <h3 class="text-lg leading-6 font-medium text-gray-900 mt-4" id="errorTitle">Error</h3>
+            <div class="mt-2 px-7 py-3">
+                <p class="text-sm text-gray-500" id="errorMessage"></p>
+            </div>
+            <div class="items-center px-4 py-3">
+                <button id="closeError" class="px-4 py-2 bg-red-500 text-white text-base font-medium rounded-md shadow-sm hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div> 
