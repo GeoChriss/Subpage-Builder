@@ -147,6 +147,14 @@ async function extractTemplate(zipPath, category, geo, name) {
         // Extract the ZIP file
         await extract(zipPath, { dir: extractPath });
         console.log('Extracted ZIP file successfully');
+
+        // Verify that views/index.ejs exists
+        const indexPath = path.join(extractPath, 'views', 'index.ejs');
+        try {
+            await fsPromises.access(indexPath);
+        } catch (error) {
+            throw new Error('Template must contain views/index.ejs file');
+        }
         
         // Clean up the temporary ZIP file
         await fsPromises.unlink(zipPath);
@@ -155,8 +163,35 @@ async function extractTemplate(zipPath, category, geo, name) {
         return true;
     } catch (error) {
         console.error('Error extracting template:', error);
+        // Clean up the extracted directory if there was an error
+        try {
+            await fsPromises.rm(extractPath, { recursive: true, force: true });
+        } catch (cleanupError) {
+            console.error('Error cleaning up after failed extraction:', cleanupError);
+        }
         throw new Error(`Failed to extract template: ${error.message}`);
     }
+}
+
+// Helper function to find index.ejs file recursively
+async function findIndexEjs(directory) {
+    try {
+        const entries = await fsPromises.readdir(directory, { withFileTypes: true });
+        console.log(`Scanning directory ${directory}:`, entries.map(e => e.name));
+        
+        for (const entry of entries) {
+            const fullPath = path.join(directory, entry.name);
+            if (entry.isDirectory()) {
+                const found = await findIndexEjs(fullPath);
+                if (found) return found;
+            } else if (entry.name === 'index.ejs') {
+                return fullPath;
+            }
+        }
+    } catch (error) {
+        console.error(`Error scanning directory ${directory}:`, error);
+    }
+    return null;
 }
 
 // Routes
@@ -218,18 +253,40 @@ app.post('/api/generate', async (req, res) => {
         const templatePath = path.join(__dirname, 'templates', category, geo, template);
         console.log('Template path:', templatePath);
         
+        // Log the template directory structure
+        console.log('Checking template directory structure...');
+        const templateFiles = await fsPromises.readdir(templatePath, { withFileTypes: true });
+        console.log('Files in template directory:', templateFiles.map(f => f.name));
+        
+        // Find index.ejs file and determine actual template root
+        const indexEjsPath = await findIndexEjs(templatePath);
+        if (!indexEjsPath) {
+            throw new Error('Could not find index.ejs file in template directory');
+        }
+        console.log('Found index.ejs at:', indexEjsPath);
+        
+        // Determine the actual template root directory (parent of views folder)
+        const templateRoot = path.dirname(path.dirname(indexEjsPath));
+        console.log('Template root directory:', templateRoot);
+        
         // Create directory structure
         await fsPromises.mkdir(path.join(outputDir, 'views'), { recursive: true });
         await fsPromises.mkdir(path.join(outputDir, 'public'), { recursive: true });
 
-        // Copy public folder
-        const publicSrcPath = path.join(templatePath, 'public');
-        const publicDestPath = path.join(outputDir, 'public');
-        await copyDir(publicSrcPath, publicDestPath);
+        // Copy public folder from template root
+        const publicSrcPath = path.join(templateRoot, 'public');
+        try {
+            await fsPromises.access(publicSrcPath);
+            console.log('Copying public folder from:', publicSrcPath);
+            await copyDir(publicSrcPath, path.join(outputDir, 'public'));
+            console.log('Public folder copied successfully');
+        } catch (error) {
+            console.log('No public folder found or error copying:', error);
+            // Continue without public folder
+        }
 
         // Process EJS file for download (keeping original paths)
-        const ejsPath = path.join(templatePath, 'views', 'index.ejs');
-        const processedContent = await processEjsFile(ejsPath, {
+        const processedContent = await processEjsFile(indexEjsPath, {
             domainName,
             domainUrl,
             subpageName
@@ -248,10 +305,17 @@ app.post('/api/generate', async (req, res) => {
         const previewUrl = `${previewPrefix}/view`;
         
         // Set up static route for preview assets
-        app.use(`${previewPrefix}/public`, express.static(publicDestPath));
+        const publicDestPath = path.join(outputDir, 'public');
+        try {
+            await fsPromises.access(publicDestPath);
+            console.log('Setting up static route for:', publicDestPath);
+            app.use(`${previewPrefix}/public`, express.static(publicDestPath));
+        } catch (error) {
+            console.log('No public folder for preview:', error);
+        }
         
         // Process EJS content for preview (with modified paths)
-        const previewContent = await processEjsFile(ejsPath, {
+        const previewContent = await processEjsFile(indexEjsPath, {
             domainName,
             domainUrl,
             subpageName,
@@ -296,7 +360,7 @@ app.post('/api/generate', async (req, res) => {
 
     } catch (error) {
         console.error('Error generating subpage:', error);
-        res.status(500).json({ error: 'Failed to generate subpage' });
+        res.status(500).json({ error: error.message || 'Failed to generate subpage' });
     }
 });
 
