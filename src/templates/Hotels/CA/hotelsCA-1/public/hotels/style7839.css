@@ -1,0 +1,480 @@
+/* Modern Reset and Base Styles */
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+html body {
+  font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+  background: #f8f9fa;
+  color: #2C3E50;
+  line-height: 1.7;
+  font-weight: 400;
+  padding-top: 80px; /* Add padding to account for fixed header */
+}
+
+/* Modern Typography */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Crimson Text', Georgia, serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #1B3D6D;
+}
+
+.top-heading {
+  font-size: 3.2rem;
+  line-height: 1.3;
+  margin-bottom: 2rem;
+  color: #1B3D6D;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.top-heading span {
+  color: #C8102E;
+  display: block;
+  font-size: 3.8rem;
+  margin-top: 0.5rem;
+}
+
+/* Modern Header */
+header {
+  background: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  border-bottom: none;
+}
+
+header:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, 
+    #C8102E 0%, #C8102E 45%, 
+    #FFFFFF 45%, #FFFFFF 55%, 
+    #C8102E 55%, #C8102E 100%
+  );
+}
+
+.navbar {
+  width: 100%;
+  padding: 0;
+}
+
+.navbar-brand-wrapper {
+  position: relative;
+  padding: 0.5rem 1rem;
+}
+
+.navbar-brand {
+  position: relative;
+  padding: 0;
+}
+
+.navbar-brand h2 {
+  color: #1B3D6D;
+  text-transform: none;
+  font-size: 1.8rem;
+  font-family: 'Crimson Text', serif;
+  margin: 0;
+  display: flex;
+  align-items: center;
+}
+
+.navbar-brand h2:before {
+  content: '🍁';
+  font-size: 1.5rem;
+  margin-right: 0.5rem;
+}
+
+.navbar-nav {
+  gap: 0.5rem;
+  margin-right: 1rem;
+}
+
+.nav-link {
+  color: #1B3D6D !important;
+  font-weight: 500;
+  padding: 0.75rem 1.25rem !important;
+  transition: all 0.3s ease;
+  border-radius: 0;
+  position: relative;
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+}
+
+.nav-link:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background: #C8102E;
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover:after,
+.nav-link.active:after {
+  width: 80%;
+}
+
+.nav-link:hover,
+.nav-link.active {
+  color: #C8102E !important;
+  background: transparent;
+  transform: translateY(-1px);
+}
+
+.navbar-toggler {
+  border: none;
+  padding: 0.5rem;
+  margin-right: 1rem;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:focus {
+  box-shadow: none;
+  outline: 2px solid #C8102E;
+  outline-offset: 2px;
+}
+
+.navbar-toggler i {
+  color: #1B3D6D;
+  font-size: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler:hover i {
+  color: #C8102E;
+}
+
+@media (max-width: 991px) {
+  .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(10px);
+    padding: 1rem;
+    border-bottom: 3px solid #C8102E;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .navbar-nav {
+    margin: 0;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    padding: 0.75rem 1rem !important;
+  }
+
+  .nav-link:after {
+    display: none;
+  }
+
+  .nav-link:hover,
+  .nav-link.active {
+    background: rgba(200, 16, 46, 0.1);
+    transform: none;
+    border-radius: 4px;
+  }
+}
+
+@media (max-width: 767px) {
+  header {
+    height: 70px;
+  }
+
+  .navbar-brand h2 {
+    font-size: 1.5rem;
+  }
+
+  html body {
+    padding-top: 70px;
+  }
+
+  .banner-bg {
+    margin-top: -70px;
+    padding-top: 7rem;
+  }
+}
+
+/* Banner Section */
+.banner-bg {
+  background: linear-gradient(135deg, #EDF2F7 0%, #E2E8F0 100%);
+  padding: 4rem 0 6rem; /* Reduced top padding since we have body padding */
+  position: relative;
+  margin-top: -80px; /* Offset the body padding */
+  padding-top: 8rem; /* Add extra padding to ensure content is visible */
+}
+
+.banner-bg:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #C8102E 33%, #1B3D6D 33%, #1B3D6D 66%, #C8102E 66%);
+}
+
+/* Hotel Cards */
+.hotel-desc {
+  background: #FFFFFF;
+  border-radius: 8px;
+  padding: 2.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  border: 1px solid #E2E8F0;
+  position: relative;
+  overflow: hidden;
+}
+
+.hotel-desc:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 4px;
+  height: 100%;
+  background: #C8102E;
+}
+
+.hotel-desc:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+.hotel-desc h3 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #1B3D6D;
+  border-bottom: 2px solid #E2E8F0;
+  padding-bottom: 1rem;
+}
+
+/* Image Styling */
+.img-wrap {
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding-top: 75%;
+}
+
+.img-wrap img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+
+.img-wrap:hover img {
+  transform: scale(1.05);
+}
+
+/* Custom Button */
+.btn-custom {
+  background: #C8102E;
+  color: #FFFFFF;
+  padding: 1rem 2rem;
+  border-radius: 4px;
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0.5px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  border: 2px solid #C8102E;
+}
+
+.btn-custom:hover {
+  background: #FFFFFF;
+  color: #C8102E;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(200, 16, 46, 0.2);
+}
+
+/* Section Styling */
+.section {
+  padding: 5rem 0;
+}
+
+.section.gray-bg {
+  background: linear-gradient(135deg, #EDF2F7 0%, #E2E8F0 100%);
+  position: relative;
+}
+
+.section-title-txt {
+  font-size: 2.5rem;
+  color: #1B3D6D;
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+  padding-bottom: 1rem;
+}
+
+.section-title-txt:after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: #C8102E;
+}
+
+/* Content Styling */
+.content h3 {
+  color: #C8102E;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.content p {
+  color: #2C3E50;
+  margin-bottom: 2rem;
+  line-height: 1.8;
+}
+
+/* Footer Styling */
+.footer {
+  background: #1B3D6D;
+  color: #FFFFFF;
+  padding: 4rem 0 2rem;
+  position: relative;
+}
+
+.footer:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, #C8102E 33%, #FFFFFF 33%, #FFFFFF 66%, #C8102E 66%);
+}
+
+.social-links a {
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  margin: 0 1rem;
+  transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+  color: #C8102E;
+  transform: translateY(-3px);
+}
+
+.footer-links a {
+  color: #FFFFFF;
+  margin: 0 1rem;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.footer-links a:after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #C8102E;
+  transition: all 0.3s ease;
+}
+
+.footer-links a:hover:after {
+  width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+  .top-heading {
+    font-size: 2.5rem;
+  }
+  
+  .top-heading span {
+    font-size: 3rem;
+  }
+  
+  .hotel-desc {
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .section {
+    padding: 4rem 0;
+  }
+}
+
+@media (max-width: 767px) {
+  .top-heading {
+    font-size: 2rem;
+  }
+  
+  .top-heading span {
+    font-size: 2.4rem;
+  }
+  
+  .btn-custom {
+    width: 100%;
+    text-align: center;
+    padding: 0.875rem 1.5rem;
+  }
+  
+  .section-title-txt {
+    font-size: 2rem;
+  }
+  
+  .hotel-desc h3 {
+    font-size: 1.5rem;
+  }
+}
+
+/* Add Maple Leaf Accent */
+.hotel-desc:after {
+  content: '🍁';
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  opacity: 0.2;
+}
+
+/* Custom Container Width */
+@media (min-width: 1200px) {
+  .container {
+    max-width: 1240px;
+  }
+}
+
+/* Row Reverse for Alternating Layout */
+@media (min-width: 992px) {
+  .row-reverse {
+    flex-direction: row-reverse;
+  }
+}
+
+
+

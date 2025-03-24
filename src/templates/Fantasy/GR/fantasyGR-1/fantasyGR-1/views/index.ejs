@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/webp" href="../public/images/favicon.webp">
+    <title>DomainName - Fantasy Sports Greece</title>
+    <link rel="stylesheet" href="../public/fantasy/style.css">
+</head>
+<body>
+    <header class="header">
+        <div class="brand">DomainName</div>
+        <button class="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+        <nav class="nav-bar">
+            <a href="https://www.domain.com/">Home</a>
+            <a href="https://www.domain.com/sub-page-name">Fantasy Sports</a>
+            <a href="https://domain.com/cookie-policy/">Cookies</a>
+            <a href="https://domain.com/privacy-policy">Privacy Policy</a>
+            <a href="https://domain.com/terms-conditions">Terms and Conditions</a>
+        </nav>
+    </header>
+
+    <!-- Add this script before closing body tag -->
+    <script>
+        const menuToggle = document.querySelector('.menu-toggle');
+        const navBar = document.querySelector('.nav-bar');
+        
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navBar.classList.toggle('active');
+        });
+    
+        // Close menu when clicking on links
+        document.querySelectorAll('.nav-bar a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navBar.classList.remove('active');
+            });
+        });
+    </script>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Greek Fantasy Sports</h1>
+                <h2>Your Ultimate Fantasy Sports Platform in Greece</h2>
+                <div class="hero-description">
+                    <p>Dive into the exciting world of <span class="highlight">Greek Fantasy Sports</span>. Build and manage your dream team featuring top athletes from the <span class="highlight">Greek Super League</span>, <span class="highlight">Greek Basket League</span>, and other elite Greek sporting competitions.</p>
+                    
+                    <p>Connect with Greece's largest fantasy sports community, where thousands of players compete in <span class="highlight">daily tournaments</span>, seasonal leagues, and special events. Show off your sports knowledge and win exciting prizes!</p>
+                    
+                    <p>Our platform offers an unmatched fantasy sports experience with:</p>
+                    
+                    <ul class="hero-features">
+                        <li>Live scoring updates from all Greek leagues</li>
+                        <li>Exclusive tournaments and competitions</li>
+                        <li>In-depth Greek sports statistics and analysis</li>
+                        <li>Active community of Greek fantasy sports enthusiasts</li>
+                        <li>Comprehensive player performance tracking</li>
+                    </ul>
+                </div>
+                
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-sports">
+        <div class="container">
+            <h2 class="section-title">Featured Sports</h2>
+            <div class="sports-grid">
+                <!-- Soccer Card -->
+                <div class="sport-card">
+                    <div class="card-image">
+                        <img src="../public/fantasy/soccer.jpg" alt="Greek Soccer" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>Soccer</h3>
+                        <div class="quick-stats">
+                            <div class="stat">
+                                <span class="stat-number">14</span>
+                                <span class="stat-label">Teams</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">350+</span>
+                                <span class="stat-label">Players</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-section">
+                            <h4>Overview</h4>
+                            <p>Experience the thrill of Greek Soccer through fantasy sports. Build your dream team from the top Greek leagues and compete with other managers.</p>
+                        </div>
+
+                        <div class="card-section">
+                            <h4>Leagues Included</h4>
+                            <ul>
+                                <li>Super League Greece</li>
+                                <li>Super League 2</li>
+                                <li>Greek Football Cup</li>
+                            </ul>
+                        </div>
+
+                        <div class="card-section">
+                            <h4>Features</h4>
+                            <ul>
+                                <li>Live match tracking</li>
+                                <li>Player performance analytics</li>
+                                <li>Weekly team management</li>
+                                <li>Transfer market system</li>
+                            </ul>
+                        </div>
+
+                        
+                    </div>
+                </div>
+
+                <!-- Basketball Card -->
+                <div class="sport-card">
+                    <div class="card-image">
+                        <img src="../public/fantasy/basketball.jpg" alt="Greek Basketball" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>Basketball</h3>
+                        <div class="quick-stats">
+                            <div class="stat">
+                                <span class="stat-number">12</span>
+                                <span class="stat-label">Teams</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">200+</span>
+                                <span class="stat-label">Players</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-section">
+                            <h4>Overview</h4>
+                            <p>Join the elite world of Greek Basketball fantasy leagues. Select players from the top Greek basketball teams and compete against other managers.</p>
+                        </div>
+
+                        <div class="card-section">
+                            <h4>Leagues Included</h4>
+                            <ul>
+                                <li>Greek Basket League</li>
+                                <li>Greek Basketball Cup</li>
+                                <li>Greek A2 Basketball League</li>
+                            </ul>
+                        </div>
+
+                        <div class="card-section">
+                            <h4>Features</h4>
+                            <ul>
+                                <li>Real-time scoring updates</li>
+                                <li>Advanced player statistics</li>
+                                <li>Dynamic team management</li>
+                                <li>Season-long competitions</li>
+                            </ul>
+                        </div>
+
+                        
+                    </div>
+                </div>
+
+                <!-- Handball Card -->
+                <div class="sport-card">
+                    <div class="card-image">
+                        <img src="../public/fantasy/handball.jpg" alt="Greek Handball" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>Handball</h3>
+                        <div class="quick-stats">
+                            <div class="stat">
+                                <span class="stat-number">10</span>
+                                <span class="stat-label">Teams</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">150+</span>
+                                <span class="stat-label">Players</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-section">
+                            <h4>Overview</h4>
+                            <p>Experience the fast-paced action of Greek Handball in fantasy format. Create your ultimate team from Greece's top handball talents.</p>
+                        </div>
+
+                        <div class="card-section">
+                            <h4>Leagues Included</h4>
+                            <ul>
+                                <li>Greek Handball Premier</li>
+                                <li>Greek Handball Cup</li>
+                                <li>A1 Ethniki Handball</li>
+                            </ul>
+                        </div>
+
+                        <div class="card-section">
+                            <h4>Features</h4>
+                            <ul>
+                                <li>Point-based scoring system</li>
+                                <li>Player performance tracking</li>
+                                <li>Weekly competitions</li>
+                                <li>Injury updates</li>
+                            </ul>
+                        </div>
+
+                       
+                    </div>
+                </div>
+
+                <!-- Volleyball Card -->
+                <div class="sport-card">
+                    <div class="card-image">
+                        <img src="../public/fantasy/volleyball.jpg" alt="Greek Volleyball" loading="lazy">
+                    </div>
+                    <div class="card-content">
+                        <h3>Volleyball</h3>
+                        <div class="quick-stats">
+                            <div class="stat">
+                                <span class="stat-number">12</span>
+                                <span class="stat-label">Teams</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-number">180+</span>
+                                <span class="stat-label">Players</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-section">
+                            <h4>Overview</h4>
+                            <p>Dive into Greek Volleyball fantasy leagues. Select your dream team from the country's elite volleyball players and compete for glory.</p>
+                        </div>
+
+                        <div class="card-section">
+                            <h4>Leagues Included</h4>
+                            <ul>
+                                <li>A1 Ethniki Volleyball</li>
+                                <li>Greek Volleyball Cup</li>
+                                <li>Greek League All-Star Games</li>
+                            </ul>
+                        </div>
+
+                        <div class="card-section">
+                            <h4>Features</h4>
+                            <ul>
+                                <li>Set-by-set scoring</li>
+                                <li>Statistical analysis</li>
+                                <li>Team rankings</li>
+                                <li>Player efficiency ratings</li>
+                            </ul>
+                        </div>
+
+                       
+                    </div>
+                </div>
+
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add after featured-sports section -->
+    <section class="why-choose-us">
+        <div class="container">
+            <h2 class="section-title">Why Choose Us</h2>
+            <div class="reasons-grid">
+                <div class="reason-card">
+                    <h3>Authentic Greek Experience</h3>
+                    <p>Immerse yourself in the <span class="highlight">authentic Greek sports culture</span> with our platform. We offer exclusive coverage of <span class="highlight">local leagues</span> and deep insights into Greek sports, providing an experience crafted specifically for Greek sports enthusiasts.</p>
+                </div>
+
+                <div class="reason-card">
+                    <h3>Advanced Analytics Platform</h3>
+                    <p>Leverage our <span class="highlight">cutting-edge analytics</span> and <span class="highlight">real-time statistics</span> to make informed decisions. Our platform processes thousands of data points to provide you with the most comprehensive fantasy sports experience in Greece.</p>
+                </div>
+
+                <div class="reason-card">
+                    <h3>Vibrant Community</h3>
+                    <p>Join Greece's <span class="highlight">largest fantasy sports community</span> with thousands of active players. Engage in <span class="highlight">weekly tournaments</span>, participate in discussions, and compete with fellow sports enthusiasts across the country.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Add after why-choose-us section -->
+        <section class="responsible-gaming">
+            <div class="container">
+                <h2 class="section-title">Play Responsibly</h2>
+                <div class="responsible-content">
+                    <div class="responsible-message">
+                        <h3>Your Entertainment Matters</h3>
+                        <p>At <span class="highlight">Greek Fantasy Sports</span>, we promote responsible participation and healthy competition. Fantasy sports should be an enjoyable leisure activity that enhances your sports experience.</p>
+                        
+                        <div class="guidelines">
+                            <h4>Our Commitment to You</h4>
+                            <ul>
+                                <li>Age verification and strict access controls</li>
+                                <li>Self-imposed participation limits</li>
+                                <li>Transparent scoring and fair play systems</li>
+                                <li>Time management tools and activity tracking</li>
+                                <li>24/7 support for responsible gaming inquiries</li>
+                            </ul>
+                        </div>
+    
+                        <div class="support-info">
+                            <p>Need support? Our dedicated team is here to help maintain a balanced and enjoyable fantasy sports experience.</p>
+                            <a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer" class="secondary-button">Contact Support</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Add footer section -->
+        <footer class="footer">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-section">
+                        <h4>About Us</h4>
+                        <p>Greek Fantasy Sports is your premier destination for fantasy sports in Greece, offering an authentic and engaging experience for sports enthusiasts.</p>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <ul>
+                            <li><a href="https://domain.com">Home</a></li>
+                            <li><a href="https://domain.com/cookie-policy">Cookies</a></li>
+                            <li><a href="https://domain.com/terms-conditions">Terms & Conditions</a></li>
+                            <li><a href="https://domain.com/privacy-policy">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>Support</h4>
+                        <ul>
+                            <li><a href="https://www.begambleaware.org" target="_blank" rel="noopener noreferrer">Get Support</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="footer-section">
+                        <h4>Connect With Us</h4>
+                        <div class="social-links">
+                            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">Facebook</a>
+                            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">Twitter</a>
+                            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="greek-promo">
+                    <p>
+                        Καλωσήρθατε στην κορυφαία πλατφόρμα <span class="highlight">Fantasy Sports</span> στην Ελλάδα. Απολαύστε μοναδικές εμπειρίες με <span class="highlight">ζωντανή βαθμολόγηση</span> και συναρπαστικά <span class="highlight">πρωταθλήματα</span> σε ποδόσφαιρο, μπάσκετ, βόλεϊ και χάντμπολ. Δημιουργήστε την ομάδα των ονείρων σας και ανταγωνιστείτε με χιλιάδες <span class="highlight">Έλληνες παίκτες</span> σε καθημερινά τουρνουά.
+                    </p>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2025 DomainName. All rights reserved.</p>
+                    <img src="../public/fantasy/18plus.png" alt="18+ Only" class="age-restriction" loading="lazy">
+                </div>
+            </div>
+        </footer>
+    </body>
+</html>
+<head>
+    <!-- Add after existing meta tags -->
+    <style>
+        .age-verify {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .age-verify-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .age-verify h2 {
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .age-verify p {
+            margin-bottom: 2rem;
+            color: var(--text-secondary);
+        }
+
+        .age-verify-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .age-verify-buttons button {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .age-verify-yes {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+        }
+
+        .age-verify-no {
+            background: #ff4444;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Add after opening body tag -->
+    <div class="age-verify" id="ageVerifyPopup">
+        <div class="age-verify-content">
+            <h2>Age Verification Required</h2>
+            <p>You must be 18 years or older to access this site. Please confirm your age to continue.</p>
+            <div class="age-verify-buttons">
+                <button class="age-verify-yes" onclick="verifyAge(true)">I am 18 or older</button>
+                <button class="age-verify-no" onclick="verifyAge(false)">I am under 18</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add before closing body tag -->
+    <script>
+        function verifyAge(isAdult) {
+            if (isAdult) {
+                document.getElementById('ageVerifyPopup').style.display = 'none';
+                localStorage.setItem('ageVerified', 'true');
+            } else {
+                window.location.href = 'https://www.begambleaware.org';
+            }
+        }
+
+        // Check if age was previously verified
+        window.onload = function() {
+            if (!localStorage.getItem('ageVerified')) {
+                document.getElementById('ageVerifyPopup').style.display = 'flex';
+            } else {
+                document.getElementById('ageVerifyPopup').style.display = 'none';
+            }
+        }
+    </script>
+</body>

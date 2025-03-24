@@ -21,7 +21,6 @@ pids
 # Directory for temporary files
 src/temp/
 src/temp/*
-src/templates/*
 
 # IDE - VSCode
 .vscode/*
