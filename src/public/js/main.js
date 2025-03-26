@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     let downloadUrl = '';
     let currentPreviewUrl = '';
+    let isAiContentApplied = false;
 
     // Navigation functions
     function showStep(stepIndex) {
@@ -229,10 +230,21 @@ document.addEventListener('DOMContentLoaded', () => {
             // Store the download URL and preview URL for later use
             downloadUrl = result.downloadUrl;
             currentPreviewUrl = result.previewUrl;
-            
+            isAiContentApplied = false;
+
+            // Show preview with basic notification
             if (result.previewUrl) {
-                // Show preview
-                previewContent.innerHTML = `<iframe src="${result.previewUrl}" class="w-full h-[700px]"></iframe>`;
+                // Add a notice about the AI content option
+                const downloadNotice = document.createElement('div');
+                downloadNotice.className = 'text-center p-4 mb-4 bg-blue-100 text-blue-800 rounded-md';
+                downloadNotice.innerHTML = '<i class="fas fa-info-circle mr-2"></i> Your subpage is ready! You can download it now or enhance it with AI content first.';
+                
+                // Add the notice before the iframe
+                previewContent.innerHTML = '';
+                previewContent.appendChild(downloadNotice);
+                previewContent.innerHTML += `<iframe src="${result.previewUrl}" class="w-full h-[700px]"></iframe>`;
+                
+                // Show preview modal
                 previewModal.classList.remove('hidden');
             } else {
                 throw new Error('No preview available');
@@ -291,6 +303,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Update the preview iframe and download URL
             currentPreviewUrl = result.previewUrl;
             downloadUrl = result.downloadUrl;
+            isAiContentApplied = true;
             
             // Replace the current preview with the AI-rewritten version
             previewContent.innerHTML = '';
@@ -298,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Create a message indicating the content is being rewritten
             const aiNotice = document.createElement('div');
             aiNotice.className = 'text-center p-4 mb-4 bg-purple-100 text-purple-800 rounded-md';
-            aiNotice.innerHTML = '<i class="fas fa-magic mr-2"></i> Content has been rewritten with AI! Compare with the original version above.';
+            aiNotice.innerHTML = '<i class="fas fa-magic mr-2"></i> Content has been enhanced with AI! Click "Download Subpage" to save the AI-enhanced version.';
             
             // Create the new iframe with the rewritten content
             const newIframe = document.createElement('iframe');
@@ -306,7 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
             newIframe.className = 'w-full h-[700px]';
             newIframe.onload = () => {
                 // Show success message once iframe is loaded
-                showSuccess('Content successfully rewritten with AI! If you like the changes, click "Download Subpage".');
+                showSuccess('Content successfully rewritten with AI! Click "Download Subpage" to save your enhanced content.');
             };
             
             // Add both to the preview content
@@ -494,6 +507,8 @@ document.addEventListener('DOMContentLoaded', () => {
         // Reset download URL
         downloadUrl = '';
         currentPreviewUrl = '';
+        isAiContentApplied = false;
+        
         // Reset form and go back to first step
         form.reset();
         selectedCategory = '';
@@ -525,6 +540,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Reset download URL
             downloadUrl = '';
             currentPreviewUrl = '';
+            isAiContentApplied = false;
+            
             // Reset form and go back to first step
             form.reset();
             selectedCategory = '';
