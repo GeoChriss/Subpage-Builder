@@ -251,6 +251,120 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Input field validation
     const detailsInputs = steps[2].querySelectorAll('input');
+    
+    // Function to identify words in a string without spaces
+    function findWordsInString(str) {
+        // Common domain word parts to help with splitting
+        const commonWords = new Set([
+            'web', 'site', 'online', 'shop', 'store', 'blog', 'news',
+            'info', 'tech', 'game', 'play', 'bet', 'casino', 'sport',
+            'live', 'media', 'digital', 'cloud', 'host', 'data', 'app',
+            'mobile', 'social', 'market', 'buy', 'sell', 'pro', 'dev',
+            'design', 'creative', 'art', 'music', 'video', 'photo',
+            'book', 'edu', 'learn', 'academy', 'school', 'college',
+            'group', 'team', 'company', 'corp', 'inc', 'ltd', 'service',
+            'solutions', 'systems', 'network', 'net', 'soft', 'ware',
+            'hub', 'center', 'zone', 'world', 'global', 'international',
+            'local', 'home', 'house', 'place', 'space', 'time', 'life',
+            'style', 'fashion', 'food', 'health', 'fitness', 'sports',
+            'game', 'gaming', 'play', 'fun', 'entertainment', 'my', 'our',
+            'your', 'the', 'best', 'top', 'first', 'new', 'old', 'big',
+            'small', 'good', 'great', 'prime', 'super', 'mega', 'ultra'
+        ]);
+
+        // Convert string to lowercase for processing
+        str = str.toLowerCase();
+
+        // Step 1: Split by common delimiters
+        let words = str.split(/[-_.\s]+/).filter(Boolean);
+
+        // If we only got one word, try more aggressive splitting
+        if (words.length === 1) {
+            const word = words[0];
+            
+            // Step 2: Try to split by camelCase
+            const camelCaseWords = word.split(/(?=[A-Z])/).filter(Boolean);
+            if (camelCaseWords.length > 1) {
+                return camelCaseWords;
+            }
+
+            // Step 3: Try to find common words
+            let result = [];
+            let currentPos = 0;
+
+            while (currentPos < word.length) {
+                let found = false;
+                // Try to find the longest possible word starting at current position
+                for (let len = Math.min(15, word.length - currentPos); len > 1; len--) {
+                    const candidate = word.substr(currentPos, len);
+                    if (commonWords.has(candidate)) {
+                        result.push(candidate);
+                        currentPos += len;
+                        found = true;
+                        break;
+                    }
+                }
+                
+                // If no common word found, take the next character as a separate word
+                if (!found) {
+                    if (result.length > 0 && result[result.length - 1].length === 1) {
+                        // Combine single letters
+                        result[result.length - 1] += word[currentPos];
+                    } else {
+                        result.push(word[currentPos]);
+                    }
+                    currentPos++;
+                }
+            }
+
+            // If we found multiple words, use them
+            if (result.length > 1) {
+                words = result;
+            }
+        }
+
+        return words;
+    }
+
+    // Function to process domain name
+    function processDomainName(domain) {
+        // Remove protocol if exists
+        domain = domain.replace(/^(https?:\/\/)?(www\.)?/, '');
+        
+        // Remove TLD (.com, .eu, etc) and any path
+        domain = domain.split('/')[0].split('.')[0];
+        
+        // Find words in the domain
+        const words = findWordsInString(domain);
+        
+        // Capitalize first letter of each word and join with spaces
+        return words
+            .filter(word => word.length > 0)  // Remove empty strings
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+            .join(' ');
+    }
+
+    // Add special handling for domain name input
+    const domainNameInput = steps[2].querySelector('input[name="domainName"]');
+    if (domainNameInput) {
+        domainNameInput.addEventListener('paste', (e) => {
+            e.preventDefault();
+            const pastedText = e.clipboardData.getData('text');
+            domainNameInput.value = processDomainName(pastedText);
+        });
+
+        // Also process on input for manual typing
+        domainNameInput.addEventListener('input', (e) => {
+            const cursorPosition = e.target.selectionStart;
+            const processedValue = processDomainName(e.target.value);
+            if (processedValue !== e.target.value) {
+                e.target.value = processedValue;
+                // Restore cursor position
+                e.target.setSelectionRange(cursorPosition, cursorPosition);
+            }
+        });
+    }
+
     detailsInputs.forEach(input => {
         input.addEventListener('input', () => {
             if (input.value.trim() !== '') {
@@ -492,4 +606,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initialize
     fetchExistingData();
+
+    // Add keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        // Only proceed if Enter key is pressed and not in an input field
+        if (e.key === 'Enter' && document.activeElement.tagName !== 'INPUT' && 
+            document.activeElement.tagName !== 'TEXTAREA' && 
+            document.activeElement.tagName !== 'SELECT') {
+            e.preventDefault();
+            
+            // If on the last step and submit button is visible, trigger submit
+            if (currentStep === steps.length - 1 && !submitBtn.classList.contains('hidden')) {
+                submitBtn.click();
+            }
+            // Otherwise, try to proceed to next step
+            else if (!nextBtn.classList.contains('hidden')) {
+                nextBtn.click();
+            }
+        }
+    });
 }); 
