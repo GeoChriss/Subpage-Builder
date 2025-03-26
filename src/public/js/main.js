@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const closePreview = document.getElementById('closePreview');
     const previewContent = document.getElementById('previewContent');
     const downloadBtn = document.getElementById('downloadBtn');
+    const changeContentBtn = document.getElementById('changeContentBtn');
     const errorModal = document.getElementById('errorModal');
     const closeError = document.getElementById('closeError');
     const errorMessage = document.getElementById('errorMessage');
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
         subpageName: ''
     };
     let downloadUrl = '';
+    let currentPreviewUrl = '';
 
     // Navigation functions
     function showStep(stepIndex) {
@@ -224,8 +226,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await response.json();
             
-            // Store the download URL for later use
+            // Store the download URL and preview URL for later use
             downloadUrl = result.downloadUrl;
+            currentPreviewUrl = result.previewUrl;
             
             if (result.previewUrl) {
                 // Show preview
@@ -252,6 +255,110 @@ document.addEventListener('DOMContentLoaded', () => {
             showError('Download URL not available. Please try generating again.');
         }
     });
+
+    // Change content with AI handler
+    changeContentBtn.addEventListener('click', async () => {
+        try {
+            // Display loading state
+            const originalBtnText = changeContentBtn.innerHTML;
+            changeContentBtn.disabled = true;
+            changeContentBtn.innerHTML = '<div class="spinner inline-block"></div> Rewriting content...';
+            
+            // Call the API to rewrite content
+            const response = await fetch('/api/rewrite-content', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    previewUrl: currentPreviewUrl,
+                    subpageName: formDetails.subpageName,
+                    domainName: formDetails.domainName,
+                    domainUrl: formDetails.domainUrl,
+                    category: selectedCategory,
+                    geo: selectedGeo,
+                    template: selectedTemplate
+                })
+            });
+            
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to rewrite content');
+            }
+            
+            const result = await response.json();
+            
+            // Update the preview iframe and download URL
+            currentPreviewUrl = result.previewUrl;
+            downloadUrl = result.downloadUrl;
+            
+            // Replace the current preview with the AI-rewritten version
+            previewContent.innerHTML = '';
+            
+            // Create a message indicating the content is being rewritten
+            const aiNotice = document.createElement('div');
+            aiNotice.className = 'text-center p-4 mb-4 bg-purple-100 text-purple-800 rounded-md';
+            aiNotice.innerHTML = '<i class="fas fa-magic mr-2"></i> Content has been rewritten with AI! Compare with the original version above.';
+            
+            // Create the new iframe with the rewritten content
+            const newIframe = document.createElement('iframe');
+            newIframe.src = result.previewUrl;
+            newIframe.className = 'w-full h-[700px]';
+            newIframe.onload = () => {
+                // Show success message once iframe is loaded
+                showSuccess('Content successfully rewritten with AI! If you like the changes, click "Download Subpage".');
+            };
+            
+            // Add both to the preview content
+            previewContent.appendChild(aiNotice);
+            previewContent.appendChild(newIframe);
+            
+        } catch (error) {
+            console.error('Error rewriting content:', error);
+            showError(`Failed to rewrite content: ${error.message}`);
+        } finally {
+            // Reset button state
+            changeContentBtn.disabled = false;
+            changeContentBtn.innerHTML = originalBtnText;
+        }
+    });
+
+    // Function to show success message
+    function showSuccess(message) {
+        // We could create a success modal, but for simplicity let's reuse the error modal with a different style
+        errorMessage.textContent = message;
+        const errorTitle = document.getElementById('errorTitle');
+        const errorIcon = document.querySelector('#errorModal .fa-exclamation-triangle');
+        const errorButton = document.getElementById('closeError');
+        
+        // Change to success style
+        errorTitle.textContent = 'Success';
+        errorIcon.classList.remove('text-red-600');
+        errorIcon.classList.add('text-green-600');
+        errorIcon.classList.remove('fa-exclamation-triangle');
+        errorIcon.classList.add('fa-check-circle');
+        errorButton.classList.remove('bg-red-500', 'hover:bg-red-600', 'focus:ring-red-300');
+        errorButton.classList.add('bg-green-500', 'hover:bg-green-600', 'focus:ring-green-300');
+        
+        // Show the modal
+        errorModal.classList.remove('hidden');
+        
+        // Add an event to reset the styles when the modal is closed
+        const resetStyles = () => {
+            errorTitle.textContent = 'Error';
+            errorIcon.classList.add('text-red-600');
+            errorIcon.classList.remove('text-green-600');
+            errorIcon.classList.add('fa-exclamation-triangle');
+            errorIcon.classList.remove('fa-check-circle');
+            errorButton.classList.add('bg-red-500', 'hover:bg-red-600', 'focus:ring-red-300');
+            errorButton.classList.remove('bg-green-500', 'hover:bg-green-600', 'focus:ring-green-300');
+            
+            // Remove this one-time event listener
+            closeError.removeEventListener('click', resetStyles);
+        };
+        
+        closeError.addEventListener('click', resetStyles);
+    }
 
     // Category selection
     document.querySelectorAll('.category-btn').forEach(btn => {
@@ -386,6 +493,7 @@ document.addEventListener('DOMContentLoaded', () => {
         previewModal.classList.add('hidden');
         // Reset download URL
         downloadUrl = '';
+        currentPreviewUrl = '';
         // Reset form and go back to first step
         form.reset();
         selectedCategory = '';
@@ -416,6 +524,7 @@ document.addEventListener('DOMContentLoaded', () => {
             previewModal.classList.add('hidden');
             // Reset download URL
             downloadUrl = '';
+            currentPreviewUrl = '';
             // Reset form and go back to first step
             form.reset();
             selectedCategory = '';
