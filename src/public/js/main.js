@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewModal = document.getElementById('previewModal');
     const closePreview = document.getElementById('closePreview');
     const previewContent = document.getElementById('previewContent');
+    const downloadBtn = document.getElementById('downloadBtn');
     const errorModal = document.getElementById('errorModal');
     const closeError = document.getElementById('closeError');
     const errorMessage = document.getElementById('errorMessage');
@@ -24,6 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         domainUrl: '',
         subpageName: ''
     };
+    let downloadUrl = '';
 
     // Navigation functions
     function showStep(stepIndex) {
@@ -222,14 +224,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const result = await response.json();
             
+            // Store the download URL for later use
+            downloadUrl = result.downloadUrl;
+            
             if (result.previewUrl) {
                 // Show preview
-                previewContent.innerHTML = `<iframe src="${result.previewUrl}" class="w-full h-[500px]"></iframe>`;
+                previewContent.innerHTML = `<iframe src="${result.previewUrl}" class="w-full h-[700px]"></iframe>`;
                 previewModal.classList.remove('hidden');
+            } else {
+                throw new Error('No preview available');
             }
-            
-            // Trigger download
-            window.location.href = result.downloadUrl;
         } catch (error) {
             console.error('Error generating subpage:', error);
             showError('Failed to generate subpage. Please try again.');
@@ -237,6 +241,15 @@ document.addEventListener('DOMContentLoaded', () => {
             // Reset loading state
             submitBtn.disabled = false;
             submitBtn.innerHTML = 'Generate Subpage';
+        }
+    });
+
+    // Download button handler
+    downloadBtn.addEventListener('click', () => {
+        if (downloadUrl) {
+            window.location.href = downloadUrl;
+        } else {
+            showError('Download URL not available. Please try generating again.');
         }
     });
 
@@ -267,62 +280,58 @@ document.addEventListener('DOMContentLoaded', () => {
             'hub', 'center', 'zone', 'world', 'global', 'international',
             'local', 'home', 'house', 'place', 'space', 'time', 'life',
             'style', 'fashion', 'food', 'health', 'fitness', 'sports',
-            'game', 'gaming', 'play', 'fun', 'entertainment', 'my', 'our',
-            'your', 'the', 'best', 'top', 'first', 'new', 'old', 'big',
-            'small', 'good', 'great', 'prime', 'super', 'mega', 'ultra'
+            'game', 'gaming', 'play', 'fun', 'entertainment'
         ]);
 
-        // Convert string to lowercase for processing
-        str = str.toLowerCase();
-
-        // Step 1: Split by common delimiters
-        let words = str.split(/[-_.\s]+/).filter(Boolean);
-
-        // If we only got one word, try more aggressive splitting
+        // First try splitting by common delimiters
+        let words = str.split(/[-_\s]+/);
+        
+        // If only one word, try to identify compound words
         if (words.length === 1) {
-            const word = words[0];
-            
-            // Step 2: Try to split by camelCase
-            const camelCaseWords = word.split(/(?=[A-Z])/).filter(Boolean);
-            if (camelCaseWords.length > 1) {
-                return camelCaseWords;
-            }
-
-            // Step 3: Try to find common words
+            const word = words[0].toLowerCase();
             let result = [];
-            let currentPos = 0;
-
-            while (currentPos < word.length) {
-                let found = false;
-                // Try to find the longest possible word starting at current position
-                for (let len = Math.min(15, word.length - currentPos); len > 1; len--) {
-                    const candidate = word.substr(currentPos, len);
-                    if (commonWords.has(candidate)) {
-                        result.push(candidate);
-                        currentPos += len;
-                        found = true;
+            let currentWord = '';
+            
+            for (let i = 0; i < word.length; i++) {
+                currentWord += word[i];
+                
+                // Check if we have a common word
+                if (commonWords.has(currentWord)) {
+                    result.push(currentWord);
+                    currentWord = '';
+                    continue;
+                }
+                
+                // Look ahead for common words
+                for (let j = i + 1; j < word.length; j++) {
+                    const nextPart = word.substring(i, j + 1);
+                    const remainingPart = word.substring(j + 1);
+                    
+                    if (commonWords.has(nextPart) && 
+                        (remainingPart.length === 0 || commonWords.has(remainingPart))) {
+                        if (currentWord) {
+                            result.push(currentWord);
+                        }
+                        result.push(nextPart);
+                        i = j;
+                        currentWord = '';
                         break;
                     }
                 }
                 
-                // If no common word found, take the next character as a separate word
-                if (!found) {
-                    if (result.length > 0 && result[result.length - 1].length === 1) {
-                        // Combine single letters
-                        result[result.length - 1] += word[currentPos];
-                    } else {
-                        result.push(word[currentPos]);
-                    }
-                    currentPos++;
+                // If no common words found, try to split by capital letters
+                if (i === word.length - 1 && currentWord) {
+                    const capitalSplit = currentWord.replace(/([A-Z])/g, ' $1').trim().split(' ');
+                    result = result.concat(capitalSplit);
                 }
             }
-
-            // If we found multiple words, use them
+            
+            // If we found compound words, use them; otherwise keep original split
             if (result.length > 1) {
                 words = result;
             }
         }
-
+        
         return words;
     }
 
@@ -337,11 +346,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // Find words in the domain
         const words = findWordsInString(domain);
         
-        // Capitalize first letter of each word and join with spaces
-        return words
-            .filter(word => word.length > 0)  // Remove empty strings
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-            .join(' ');
+        // Capitalize first letter of each word
+        return words.map(word => 
+            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        ).join(' ');
     }
 
     // Add special handling for domain name input
@@ -376,6 +384,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Modal handling
     closePreview.addEventListener('click', () => {
         previewModal.classList.add('hidden');
+        // Reset download URL
+        downloadUrl = '';
         // Reset form and go back to first step
         form.reset();
         selectedCategory = '';
@@ -404,6 +414,8 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('click', (e) => {
         if (e.target === previewModal) {
             previewModal.classList.add('hidden');
+            // Reset download URL
+            downloadUrl = '';
             // Reset form and go back to first step
             form.reset();
             selectedCategory = '';
